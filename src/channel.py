@@ -6,19 +6,18 @@ API_KEY = os.getenv('API_KEY')
 
 
 class Channel:
-    """Класс для ютуб-канала"""
     youtube = build('youtube', 'v3', developerKey=API_KEY)
 
-    def __init__(self, channel_id) -> None:
-        """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
+    def __init__(self, channel_id):
+        """Инициализация класса Channel"""
         self.__channel_id = channel_id
-        self.title = self.title_youtube()
-        self.id = self.id_channel()
-        self.description = self.descriptions()
-        self.url = self.url_channel()
-        self.subscriber = self.subscriber_count()
-        self.video_count = self.video_counts()
-        self.view_count = self.view_counts()
+        channel = self.json_loads()
+        self.title = channel['items'][0]['snippet']['title']
+        self.description = channel['items'][0]['snippet']['description']
+        self.url = f'https://www.youtube.com/channel/{channel["items"][0]["id"]}'
+        self.subscriber = channel['items'][0]['statistics']['subscriberCount']
+        self.video_count = channel['items'][0]['statistics']['videoCount']
+        self.view_count = channel['items'][0]['statistics']['viewCount']
 
     @property
     def channel_id(self):
@@ -44,40 +43,6 @@ class Channel:
             self.youtube.channels().list(id=self.__channel_id, part='snippet,statistics').execute(),
             indent=4)
         return json.loads(json_yotube)
-
-    def title_youtube(self):
-        """Возвращает название канала"""
-        for item in self.json_loads()['items']:
-            return item['snippet']['title']
-
-    def id_channel(self):
-        """возвращяет id канала"""
-        for item in self.json_loads()['items']:
-            return item['id']
-
-    def descriptions(self):
-        """Возвращает описание канала"""
-        for item in self.json_loads()['items']:
-            return item['snippet']['description']
-
-    def url_channel(self):
-        """Возвращает ссылку(URL:адрес) на канал"""
-        return f"https://www.youtube.com/channel/{self.id}"
-
-    def subscriber_count(self):
-        """Возвращает количество подписчиков"""
-        for item in self.json_loads()['items']:
-            return item['statistics']['subscriberCount']
-
-    def video_counts(self):
-        """Возвращает количество видео"""
-        for item in self.json_loads()['items']:
-            return item['statistics']['videoCount']
-
-    def view_counts(self):
-        """Возвращает общее количество просмотрв"""
-        for item in self.json_loads()['items']:
-            return item['statistics']['viewCount']
 
     @classmethod
     def get_service(cls):
