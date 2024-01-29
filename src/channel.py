@@ -19,6 +19,55 @@ class Channel:
         self.video_count = channel['items'][0]['statistics']['videoCount']
         self.view_count = channel['items'][0]['statistics']['viewCount']
 
+    def __str__(self):
+        """
+        Обращение пользователя к классу
+        return: <Название канала (ссылка на канал)>
+        """
+        return f"{self.title} ({self.url})"
+
+    def __add__(self, other):
+        """
+        Магический метод: сложение подписчиков двух каналов
+        return: общее число подписчиков двух каналов
+        """
+        return int(self.subscriber) + int(other.subscriber)
+
+    def __sub__(self, other):
+        """
+        Магический метод: вычитание подписчиков двух каналов
+        return: разница подписчиков двух каналов
+        """
+        return int(self.subscriber) - int(other.subscriber)
+
+    def __gt__(self, other):
+        """
+        Магический метод: сравнение <больше>. Подписчиков двух каналов
+        return: bool
+        """
+        return int(self.subscriber) > int(other.subscriber)
+
+    def __ge__(self, other):
+        """
+        Магический метод: сравнение <больше или равно>. Подписчиков двух каналов
+        return: bool
+        """
+        return int(self.subscriber) >= int(other.subscriber)
+
+    def __lt__(self, other):
+        """
+        Магический метод: сравнение <меньше>. Подписчиков двух каналов
+        return: bool
+        """
+        return int(self.subscriber) < int(other.subscriber)
+
+    def __le__(self, other):
+        """
+        Магический метод: сравнение <меньше или равно>. Подписчиков двух каналов
+        return: bool
+        """
+        return int(self.subscriber) <= int(other.subscriber)
+
     @property
     def channel_id(self):
         """getter __channel_id"""
