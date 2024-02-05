@@ -1,12 +1,16 @@
 import os
 import json
 from googleapiclient.discovery import build
+from dotenv import load_dotenv
+from config import FILE_NAME
 
-API_KEY = os.getenv('API_KEY')
+BASE_DIR = load_dotenv(FILE_NAME)
+
+API = os.getenv('API_KEY')
 
 
 class Channel:
-    youtube = build('youtube', 'v3', developerKey=API_KEY)
+    youtube = build('youtube', 'v3', developerKey=API)
 
     def __init__(self, channel_id):
         """Инициализация класса Channel"""
@@ -96,7 +100,7 @@ class Channel:
     @classmethod
     def get_service(cls):
         """Получает объект для работы с API вне класса"""
-        return build('youtube', 'v3', developerKey=API_KEY)
+        return build('youtube', 'v3', developerKey=API)
 
     def to_json(self, filename):
         """Создает json файл с данными о канале"""
