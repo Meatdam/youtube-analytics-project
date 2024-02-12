@@ -3,6 +3,8 @@ import isodate
 from dotenv import load_dotenv
 from googleapiclient.discovery import build
 import datetime
+from src.channel import Channel
+from src.video import Video, PLVideo
 
 
 class PlayList:
