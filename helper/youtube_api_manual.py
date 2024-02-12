@@ -78,6 +78,7 @@ for video in video_response['items']:
     # YouTube video duration is in ISO 8601 format
     iso_8601_duration = video['contentDetails']['duration']
     duration = isodate.parse_duration(iso_8601_duration)
+
     print(duration)
 
 

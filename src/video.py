@@ -10,24 +10,32 @@ class Video:
     load_dotenv()
     API = os.getenv('API_KEY')
 
-    def __init__(self, video_id):
+    def __init__(self, channel_id):
         """
         Инициализатор класса Vido
         """
-        self.video_id = video_id
-        self.video_response = self.get_service().videos().list(part='snippet,statistics,contentDetails,topicDetails',
-                                                               id=video_id).execute()
 
-        self.video_title: str = self.video_response['items'][0]['snippet']['title']
-        self.url = f"https://www.youtube.com/{self.video_id}"
-        self.view_count: int = self.video_response['items'][0]['statistics']['viewCount']
-        self.like_count: int = self.video_response['items'][0]['statistics']['likeCount']
+        self.video_id = channel_id
+        self.video_response = self.get_service().videos().list(part='snippet,statistics,contentDetails,topicDetails',
+                                                               id=channel_id).execute()
+
+
+        try:
+            self.title: str = self.video_response['items'][0]['snippet']['title']
+            self.url = f"https://www.youtube.com/{self.video_id}"
+            self.view_count: int = self.video_response['items'][0]['statistics']['viewCount']
+            self.like_count: int = self.video_response['items'][0]['statistics']['likeCount']
+        except IndexError:
+            self.title = None
+            self.url = None
+            self.view_count = None
+            self.like_count = None
 
     def __str__(self):
         """
         Метод str отдает строковое значение класса
         """
-        return self.video_title
+        return self.title
 
     @classmethod
     def get_service(cls):
@@ -44,10 +52,8 @@ class PLVideo(Video):
     return: id плейлиста, id видео
     """
 
-    def __init__(self, video_id, playlist_id):
+    def __init__(self, video_id, channel_id):
         super().__init__(video_id)
-        self.playlist_id = playlist_id
-        self.playlist_video = self.get_service().playlistItems().list(playlistId=playlist_id, part='contentDetails',
-                                                                      maxResults=50, ).execute()
+        self.playlist_id = channel_id
 
 
